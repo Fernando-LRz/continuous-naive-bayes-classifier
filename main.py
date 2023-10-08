@@ -22,30 +22,33 @@ def main():
     test_dataset = dataset.drop(training_dataset.index)
 
     # Crear una instancia de la clase NaiveBayes
-    naiveBayes = NaiveBayes(training_dataset)
+    naiveBayes = NaiveBayes(dataset)
 
     naiveBayes.fit()
 
     statistics_by_class = naiveBayes.getStatisticsByClass()
+    # print(statistics_by_class)
 
     # Imprimir las estadísticas (media y desviación estándar) por atributo y clase
-    print()
-    for class_label, statistics_for_class in statistics_by_class.items():
-        print(f'Clase: {class_label}')
-        print()
-        # print(statistics_for_class)
-        # print()
-        for attribute, values in statistics_for_class.items():
-            print()
-            print(f'Atributo: {attribute}')
-            print(f'Media: {values["media"]}')
-            print(f'Desviación estándar: {values["desviacion_estandar"]}')
-        print('\n')
+    # print()
+    # for class_label, statistics_for_class in statistics_by_class.items():
+    #     print(f'Clase: {class_label}')
+    #     print()
+    #     # print(statistics_for_class)
+    #     # print()
+    #     for attribute, values in statistics_for_class.items():
+    #         print()
+    #         print(f'Atributo: {attribute}')
+    #         print(f'Media: {values["media"]}')
+    #         print(f'Desviación estándar: {values["desviacion_estandar"]}')
+    #     print('\n')
 
-    print()
+    # print()
+    nuevo_df = dataset.iloc[[0]]
+    print(nuevo_df)
 
-    result = naiveBayes.evaluate(test_dataset)
-    print(result)
+    result = naiveBayes.evaluate(nuevo_df)
+    # print(result)
 
 # Ejecutar el main
 if __name__ == '__main__':
