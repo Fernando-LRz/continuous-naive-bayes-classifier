@@ -42,6 +42,14 @@ class NaiveBayes:
         # Crear una copia del conjunto de datos de prueba
         result = test_dataset.copy()
 
+        # Obtener las etiquetas de clase únicas del conjunto de entrenamiento
+        unique_class_labels = self.training_dataset[self.class_name].unique()
+
+        # Calcular las probabilidades a priori de las clases en el conjunto de entrenamiento
+        class_counts = self.training_dataset[self.class_name].value_counts()
+        total_instances = len(self.training_dataset)
+        prior_probabilities = {class_label: class_counts[class_label] / total_instances for class_label in unique_class_labels}
+
         # Iterar sobre el conjunto de datos de prueba
         for index, instance in test_dataset.iterrows():
             # Inicializar un diccionario para almacenar las probabilidades de clase
@@ -52,10 +60,12 @@ class NaiveBayes:
                 # Inicializar la probabilidad de clase con 1
                 class_probability = 1.0
 
+                '''
                 print()
                 print(class_label)
                 print()
-                print(statistics_for_class)
+                print(statistics_for_class) 
+                '''
                 
                 # Iterar sobre los atributos de la instancia de prueba
                 for attribute_label in self.attributes: 
@@ -65,30 +75,38 @@ class NaiveBayes:
                     
                     # Calcular la probabilidad condicional para este atributo
                     attribute_value = instance[attribute_label]
-                    conditional_probability = (1 / (std * (2 * 3.14159265359) ** 0.5)) * (2.71828182846 ** ((-0.5) * ((attribute_value - mean) / std) ** 2))
+                    attribute_probability = (1 / (std * (2 * 3.14159265359) ** 0.5)) * (2.71828182846 ** ((-0.5) * ((attribute_value - mean) / std) ** 2))
                     
                     # Multiplicar la probabilidad condicional por la probabilidad de clase
-                    class_probability *= conditional_probability
+                    class_probability *= attribute_probability
 
+                    '''
                     print()
                     print('---------', attribute_label, '---------')
                     print()
-                    print('media y desviacion_estandar')
-                    print(mean, ' y ', std)
+                    print('media y desviación estandar')
+                    print(mean, ' - ', std)
                     print()
                     print('valor en la instancia')
                     print(attribute_value)
                     print()
                     print('formula')
-                    print(conditional_probability)
-                
+                    print(attribute_probability)
+                    '''
 
-                print()
-                print('---------', 'multiplicación', '---------')
-                print()
-                print(class_probability)
+                # Multiplicar la probabilidad a priori de la clase
+                class_probability *= prior_probabilities[class_label]
+
                 # Almacenar la probabilidad de clase en el diccionario
                 class_probabilities[class_label] = class_probability
+
+                '''
+                print()
+                print('---------', 'probabilidad de la clase', '---------')
+                print()
+                print(class_probability)
+                print('----------------------------------------')
+                '''
             
             # Seleccionar la clase con la probabilidad más alta 
             predicted_class = max(class_probabilities, key=class_probabilities.get)
@@ -96,8 +114,21 @@ class NaiveBayes:
             # Guardar la predicción
             predictions.append(predicted_class)
 
+            '''
+            print()
+            print('---------', 'predicción', '---------')
+            print()
+            print(class_probabilities)
+            print()
+            print(predicted_class)
+            print('------------------------------------')
+            '''
+
         # Agregar la lista de predicciones como una nueva columna al dataframe
-        result['Predicted_Class'] = predictions
+        result['predicted_class'] = predictions
+
+        # Comparar la clase esperada y la clase predecida
+        result['match'] = result[self.class_name] == result['predicted_class']
 
         return result
     
@@ -107,6 +138,3 @@ class NaiveBayes:
     def fit(self) -> None:
         # Calcular las tablas de frecuencia
         self.calculateStatisticsByClass()
-
-        # Calcular las tablas de verosimilitud
-        # self.computeLikelihoodTables()
