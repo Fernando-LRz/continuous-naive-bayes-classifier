@@ -22,11 +22,15 @@ def main():
     test_dataset = dataset.drop(training_dataset.index)
 
     # Crear una instancia de la clase NaiveBayes
-    naiveBayes = NaiveBayes(dataset)
+    naiveBayes = NaiveBayes(training_dataset)
 
     naiveBayes.fit()
+
+    # instance = dataset.iloc[[0]]
+    # print()
+    # print(instance)
+
     result = naiveBayes.evaluate(test_dataset)
-    
     print(result)
 
 # Ejecutar el main
