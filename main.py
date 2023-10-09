@@ -17,24 +17,18 @@ def main():
     
     # Definir el set de datos de entrenamiento, seleccionando aleatoriamente las instancias
     training_dataset = dataset.sample(number_of_instances)
-    # training_dataset = dataset.sample(105, random_state=40)
 
     # Definir el set de datos de prueba
     test_dataset = dataset.drop(training_dataset.index)
-    # test_dataset = dataset.drop(training_dataset.index).sample(n=45, random_state=40)
 
     # Crear una instancia de la clase NaiveBayes
     naiveBayes = NaiveBayes(training_dataset)
 
     naiveBayes.fit()
 
-    # instance = dataset.iloc[[0]]
-
     result = naiveBayes.evaluate(test_dataset)
     confusion_matrix, accuracy = naiveBayes.computeConfusionMatrix(result)
 
-    # print()
-    # print(instance)
     print()
     print('Conjunto de entrenamiento')
     print()

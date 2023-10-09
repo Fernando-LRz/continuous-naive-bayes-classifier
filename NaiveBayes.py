@@ -1,3 +1,4 @@
+from typing import Tuple
 import pandas
 
 class NaiveBayes:
@@ -60,13 +61,6 @@ class NaiveBayes:
                 # Inicializar la probabilidad de clase con 1
                 class_probability = 1.0
 
-                '''
-                print()
-                print(class_label)
-                print()
-                print(statistics_for_class) 
-                '''
-                
                 # Iterar sobre los atributos de la instancia de prueba
                 for attribute_label in self.attributes: 
                     # Obtener la media y desviación estándar del atributo para la clase actual
@@ -80,49 +74,17 @@ class NaiveBayes:
                     # Multiplicar la probabilidad condicional por la probabilidad de clase
                     class_probability *= attribute_probability
 
-                    '''
-                    print()
-                    print('---------', attribute_label, '---------')
-                    print()
-                    print('media y desviación estandar')
-                    print(mean, ' - ', std)
-                    print()
-                    print('valor en la instancia')
-                    print(attribute_value)
-                    print()
-                    print('formula')
-                    print(attribute_probability)
-                    '''
-
                 # Multiplicar la probabilidad a priori de la clase
                 class_probability *= prior_probabilities[class_label]
 
                 # Almacenar la probabilidad de clase en el diccionario
                 class_probabilities[class_label] = class_probability
 
-                '''
-                print()
-                print('---------', 'probabilidad de la clase', '---------')
-                print()
-                print(class_probability)
-                print('----------------------------------------')
-                '''
-            
             # Seleccionar la clase con la probabilidad más alta 
             predicted_class = max(class_probabilities, key=class_probabilities.get)
 
             # Guardar la predicción
             predictions.append(predicted_class)
-
-            '''
-            print()
-            print('---------', 'predicción', '---------')
-            print()
-            print(class_probabilities)
-            print()
-            print(predicted_class)
-            print('------------------------------------')
-            '''
 
         # Agregar la lista de predicciones como una nueva columna al dataframe
         result['predicted_class'] = predictions
@@ -132,7 +94,7 @@ class NaiveBayes:
 
         return result
     
-    def computeConfusionMatrix(self, result):
+    def computeConfusionMatrix(self, result) -> Tuple[pandas.DataFrame, float]:
         # Crear un dataframe para la matriz de confusión
         confusion_matrix = pandas.crosstab(result[self.class_name], result['predicted_class'], rownames=['Actual'], colnames=['Predicted'])
 
@@ -157,5 +119,5 @@ class NaiveBayes:
         return self.statistics_by_class
 
     def fit(self) -> None:
-        # Calcular las tablas de frecuencia
+        # Calcular las estadisticas para cada clase y atributo (media y desviación estándar)
         self.calculateStatisticsByClass()
