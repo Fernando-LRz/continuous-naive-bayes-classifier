@@ -30,7 +30,7 @@ class NaiveBayes:
                 std = class_data[attribute_label].std(ddof=0)
                 
                 # Almacenar las estadísticas en el diccionario para esta clase
-                statistics_for_class[attribute_label] = {'media': mean, 'desviacion_estandar': std}
+                statistics_for_class[attribute_label] = {'mean': mean, 'standard_deviation': std}
             
             # Almacenar el diccionario de estadísticas por clase
             self.statistics_by_class[class_label] = statistics_for_class
@@ -70,8 +70,8 @@ class NaiveBayes:
                 # Iterar sobre los atributos de la instancia de prueba
                 for attribute_label in self.attributes: 
                     # Obtener la media y desviación estándar del atributo para la clase actual
-                    mean = statistics_for_class[attribute_label]['media']
-                    std = statistics_for_class[attribute_label]['desviacion_estandar']
+                    mean = statistics_for_class[attribute_label]['mean']
+                    std = statistics_for_class[attribute_label]['standard_deviation']
                     
                     # Calcular la probabilidad condicional para este atributo
                     attribute_value = instance[attribute_label]
@@ -131,6 +131,27 @@ class NaiveBayes:
         result['match'] = result[self.class_name] == result['predicted_class']
 
         return result
+    
+    def computeConfusionMatrix(self, result):
+        # Crear un dataframe para la matriz de confusión
+        confusion_matrix = pandas.crosstab(result[self.class_name], result['predicted_class'], rownames=['Actual'], colnames=['Predicted'])
+
+        # Calcular la precisión para cada clase
+        class_precisions = confusion_matrix.apply(lambda col: col[col.name] / col.sum(), axis=0)
+
+        # Calcular el recall para cada clase
+        class_recalls = confusion_matrix.apply(lambda row: row[row.name] / row.sum(), axis=1)
+
+        # Calcular exactitud del modelo
+        correct_predictions = sum(confusion_matrix[i][i] for i in confusion_matrix.index)
+        total_predictions = confusion_matrix.sum().sum()
+        accuracy = correct_predictions / total_predictions
+
+        # Agregar una fila para recall y una columna para precisión
+        confusion_matrix.loc['Recall'] = class_recalls
+        confusion_matrix['Precision'] = class_precisions
+
+        return confusion_matrix, accuracy
     
     def getStatisticsByClass(self) -> dict:
         return self.statistics_by_class
