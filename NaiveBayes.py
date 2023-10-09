@@ -62,16 +62,16 @@ class NaiveBayes:
                 class_probability = 1.0
 
                 # Iterar sobre los atributos de la instancia de prueba
-                for attribute_label in self.attributes: 
+                for attribute_label in self.attributes:        
                     # Obtener la media y desviación estándar del atributo para la clase actual
                     mean = statistics_for_class[attribute_label]['mean']
                     std = statistics_for_class[attribute_label]['standard_deviation']
                     
-                    # Calcular la probabilidad condicional para este atributo
+                    # Calcular la probabilidad del atributo
                     attribute_value = instance[attribute_label]
                     attribute_probability = (1 / (std * (2 * 3.14159265359) ** 0.5)) * (2.71828182846 ** ((-0.5) * ((attribute_value - mean) / std) ** 2))
                     
-                    # Multiplicar la probabilidad condicional por la probabilidad de clase
+                    # Multiplicar la probabilidad del atributo por la probabilidad de la clase
                     class_probability *= attribute_probability
 
                 # Multiplicar la probabilidad a priori de la clase
