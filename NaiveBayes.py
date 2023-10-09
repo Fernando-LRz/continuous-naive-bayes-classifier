@@ -142,12 +142,12 @@ class NaiveBayes:
         # Calcular el recall para cada clase
         class_recalls = confusion_matrix.apply(lambda row: row[row.name] / row.sum(), axis=1)
 
-        # Calcular exactitud del modelo
+        # Calcular la exactitud del modelo
         correct_predictions = sum(confusion_matrix[i][i] for i in confusion_matrix.index)
         total_predictions = confusion_matrix.sum().sum()
         accuracy = correct_predictions / total_predictions
 
-        # Agregar una fila para recall y una columna para precisión
+        # Agregar una fila para el recall y una columna para la precisión
         confusion_matrix.loc['Recall'] = class_recalls
         confusion_matrix['Precision'] = class_precisions
 
